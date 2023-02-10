@@ -14,11 +14,21 @@ import com.google.firebase.auth.FirebaseUser
 
 class LoginActivity : AppCompatActivity() {
     private var auth = FirebaseAuth.getInstance()
-    private var firebaseUser: FirebaseUser? = null
+    private var firebaseUser = auth.currentUser!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+
+        if (firebaseUser != null) {
+            val intent = Intent(
+                this@LoginActivity,
+                UsersActivity::class.java
+            )
+            startActivity(intent)
+            finish()
+        }
 
 
         val btnLogin = findViewById<Button>(R.id.btnLogin)
