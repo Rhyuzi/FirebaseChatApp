@@ -1,5 +1,6 @@
-package com.azi.firebasechat
+package com.azi.firebasechat.activity
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
@@ -7,7 +8,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.google.firebase.FirebaseApp
+import com.azi.firebasechat.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DatabaseReference
@@ -35,6 +36,7 @@ class SignUpActivity : AppCompatActivity() {
 
 
         val btnSignUp = findViewById<Button>(R.id.btnSignUp)
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
 
         btnSignUp.setOnClickListener{
             val userName = etName.text.toString()
@@ -62,6 +64,15 @@ class SignUpActivity : AppCompatActivity() {
             }
             registerUser(userName,email,password)
         }
+
+        btnLogin.setOnClickListener{
+            val intent = Intent(
+                this@SignUpActivity,
+                LoginActivity::class.java
+            )
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun registerUser(userName:String,email:String,password:String){
@@ -80,8 +91,10 @@ class SignUpActivity : AppCompatActivity() {
                     hashMap.put("profileImage","")
 
                     databaseReference.setValue(hashMap).addOnCompleteListener(this){
+                        Log.d("WHYYYYYY", "coy")
                         if (it.isSuccessful){
                             Toast.makeText(applicationContext,"Berhasil", Toast.LENGTH_SHORT).show()
+                            Log.d("WHYYYYYY", "Berhasillllll ")
                         }else{
                             Log.d("WHYYYYYY", "Write failed with error: " + it.exception)
                         }
