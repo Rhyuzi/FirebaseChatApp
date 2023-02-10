@@ -91,12 +91,17 @@ class SignUpActivity : AppCompatActivity() {
                     hashMap.put("profileImage","")
 
                     databaseReference.setValue(hashMap).addOnCompleteListener(this){
-                        Log.d("WHYYYYYY", "coy")
                         if (it.isSuccessful){
-                            Toast.makeText(applicationContext,"Berhasil", Toast.LENGTH_SHORT).show()
-                            Log.d("WHYYYYYY", "Berhasillllll ")
+                            etName.setText("")
+                            etEmail.setText("")
+                            etPassword.setText("")
+                            etConfirmPassword.setText("")
+                            val intent = Intent(this@SignUpActivity,
+                                UsersActivity::class.java)
+                            startActivity(intent)
+                            finish()
                         }else{
-                            Log.d("WHYYYYYY", "Write failed with error: " + it.exception)
+                            Log.d("SignUpActivity", "Write failed with error: " + it.exception)
                         }
                     }
                 }
