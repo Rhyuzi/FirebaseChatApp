@@ -3,8 +3,10 @@ package com.azi.firebasechat.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.azi.firebasechat.R
 import com.azi.firebasechat.model.User
 import com.google.firebase.auth.FirebaseAuth
@@ -26,10 +28,22 @@ class ChatActivity : AppCompatActivity() {
         var imgProfile = findViewById<CircleImageView>(R.id.imgProfile)
         var tvUserName = findViewById<TextView>(R.id.tvUsername)
         var imgBack = findViewById<ImageView>(R.id.imgBack)
+        var btnSendMessage = findViewById<ImageButton>(R.id.btnSendMessage)
+        var etMessage = findViewById<EditText>(R.id.etMessage)
 
         var intent = getIntent()
         var userId = intent.getStringExtra("userId")
         var username = intent.getStringExtra("userName")
+
+        btnSendMessage.setOnClickListener{
+            var message: String = etMessage.text.toString()
+            if (message.isEmpty()){
+                Toast.makeText(applicationContext,"Message is empty",Toast.LENGTH_SHORT).show()
+            }else{
+                sendMessages(firebaseUser!!.uid,userId!!,message)
+                etMessage.setText("")
+            }
+        }
 
         imgBack.setOnClickListener{
             onBackPressed()
@@ -52,5 +66,16 @@ class ChatActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun sendMessages(senderId: String, receiverId: String, message: String){
+        var reference: DatabaseReference? = FirebaseDatabase.getInstance().getReference()
+
+        var hashMap: HashMap<String,String> = HashMap()
+        hashMap.put("senderId", senderId)
+        hashMap.put("receiverId", receiverId)
+        hashMap.put("message", message)
+
+        reference!!.child("Chats").push().setValue(hashMap)
     }
 }
