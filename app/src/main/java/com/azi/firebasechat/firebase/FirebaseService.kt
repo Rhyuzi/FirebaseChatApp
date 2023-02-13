@@ -11,10 +11,18 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Build
+import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.azi.firebasechat.R
+import com.azi.firebasechat.activity.ChatActivity
 import com.azi.firebasechat.activity.UsersActivity
+import com.azi.firebasechat.adapter.UserAdapter
+import com.azi.firebasechat.model.Chat
+import com.azi.firebasechat.model.NotificationData
+import com.azi.firebasechat.model.User
+import com.google.firebase.database.*
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import kotlin.random.Random
@@ -22,6 +30,7 @@ import kotlin.random.Random
 class FirebaseService: FirebaseMessagingService() {
 
     val CHANNEL_ID = "my_notification_channel"
+    var notificationBody = ArrayList<NotificationData>()
     companion object{
         var sharedPref: SharedPreferences? = null
 
@@ -40,9 +49,30 @@ class FirebaseService: FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(p0: RemoteMessage) {
+        val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users")
+        var intent = Intent(this,ChatActivity::class.java)
         super.onMessageReceived(p0)
 
-        val intent = Intent(this,UsersActivity::class.java)
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (dataSnapShot: DataSnapshot in snapshot.children){
+                    val user = dataSnapShot.getValue(User::class.java)
+                    if (p0.data["title"] == user!!.userName){
+                        intent.putExtra("userId",user.userId)
+                        intent.putExtra("userName",user.userName)
+
+                        Log.d("TAGGGG",user.toString())
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(applicationContext,error.message, Toast.LENGTH_SHORT).show()
+            }
+
+        })
+
+
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notificationId = Random.nextInt()
 

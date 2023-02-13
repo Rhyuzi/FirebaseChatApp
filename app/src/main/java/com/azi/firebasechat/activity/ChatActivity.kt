@@ -51,6 +51,8 @@ class ChatActivity : AppCompatActivity() {
         var intent = getIntent()
         var userId = intent.getStringExtra("userId")
         var username = intent.getStringExtra("userName")
+        Log.d("TAGGGG",userId.toString())
+        Log.d("TAGGGG",username.toString())
         firebaseUser = FirebaseAuth.getInstance().currentUser
 
         readMessages(firebaseUser!!.uid,userId!!)
