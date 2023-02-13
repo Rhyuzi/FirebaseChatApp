@@ -2,12 +2,14 @@ package com.azi.firebasechat.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.provider.ContactsContract.Data
+import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.azi.firebasechat.R
+import com.azi.firebasechat.adapter.ChatAdapter
+import com.azi.firebasechat.adapter.UserAdapter
+import com.azi.firebasechat.model.Chat
 import com.azi.firebasechat.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -17,12 +19,17 @@ import de.hdodenhof.circleimageview.CircleImageView
 class ChatActivity : AppCompatActivity() {
     var firebaseUser: FirebaseUser? = null
     var reference: DatabaseReference? = null
-//    private lateinit var imgProfile: CircleImageView
+    var chatList = ArrayList<Chat>()
+    private lateinit var chatRecyclerView: RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_activity)
+
+        chatRecyclerView = findViewById<RecyclerView>(R.id.chatRecycleView)
+        chatRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+
 
 
         var imgProfile = findViewById<CircleImageView>(R.id.imgProfile)
@@ -34,22 +41,27 @@ class ChatActivity : AppCompatActivity() {
         var intent = getIntent()
         var userId = intent.getStringExtra("userId")
         var username = intent.getStringExtra("userName")
+        firebaseUser = FirebaseAuth.getInstance().currentUser
+
+        readMessages(firebaseUser!!.uid,userId!!)
 
         btnSendMessage.setOnClickListener{
             var message: String = etMessage.text.toString()
             if (message.isEmpty()){
                 Toast.makeText(applicationContext,"Message is empty",Toast.LENGTH_SHORT).show()
+                etMessage.setText("")
             }else{
                 sendMessages(firebaseUser!!.uid,userId!!,message)
                 etMessage.setText("")
             }
+
+            readMessages(firebaseUser!!.uid,userId!!)
         }
 
         imgBack.setOnClickListener{
             onBackPressed()
         }
 
-        firebaseUser = FirebaseAuth.getInstance().currentUser
         reference = FirebaseDatabase.getInstance().getReference("Users").child(userId!!)
 
         reference!!.addValueEventListener(object : ValueEventListener{
@@ -77,5 +89,33 @@ class ChatActivity : AppCompatActivity() {
         hashMap.put("message", message)
 
         reference!!.child("Chats").push().setValue(hashMap)
+    }
+
+    fun readMessages(senderId: String, receiverId: String){
+        val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("Chats")
+
+
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                chatList.clear()
+                for (dataSnapShot: DataSnapshot in snapshot.children){
+                    val chat = dataSnapShot.getValue(Chat::class.java)
+
+                    if (chat!!.senderId.equals(senderId) && chat!!.receiverId.equals(receiverId) ||
+                        chat!!.senderId.equals(receiverId) && chat!!.receiverId.equals(senderId) ){
+                        chatList.add(chat)
+                    }
+                }
+                val chatAdapter = ChatAdapter(this@ChatActivity, chatList)
+
+                chatRecyclerView.adapter = chatAdapter
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+
     }
 }
