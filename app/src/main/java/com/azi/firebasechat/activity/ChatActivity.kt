@@ -3,23 +3,33 @@ package com.azi.firebasechat.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract.Data
+import android.util.Log
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.azi.firebasechat.R
+import com.azi.firebasechat.RetrofitInstance
 import com.azi.firebasechat.adapter.ChatAdapter
 import com.azi.firebasechat.adapter.UserAdapter
 import com.azi.firebasechat.model.Chat
+import com.azi.firebasechat.model.NotificationData
+import com.azi.firebasechat.model.PushNotification
 import com.azi.firebasechat.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
+import com.google.gson.Gson
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.Dispatcher
 
 class ChatActivity : AppCompatActivity() {
     var firebaseUser: FirebaseUser? = null
     var reference: DatabaseReference? = null
     var chatList = ArrayList<Chat>()
+    var topic = ""
     private lateinit var chatRecyclerView: RecyclerView
 
 
@@ -53,6 +63,11 @@ class ChatActivity : AppCompatActivity() {
             }else{
                 sendMessages(firebaseUser!!.uid,userId!!,message)
                 etMessage.setText("")
+                topic = "/topics/$userId"
+                PushNotification(NotificationData(username!!,message),topic)
+                    .also {
+                        sendNotification(it)
+                    }
             }
 
             readMessages(firebaseUser!!.uid,userId!!)
@@ -117,5 +132,18 @@ class ChatActivity : AppCompatActivity() {
 
         })
 
+    }
+
+    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val result = RetrofitInstance.api.postNotification(notification)
+            if (result.isSuccessful){
+                Log.d("TAG", "Response: ${Gson().toJson(result)}")
+            }else{
+                Log.e("TAG", result.errorBody()!!.string())
+            }
+        }catch (e: Exception){
+            Log.e("TAG", e.message.toString())
+        }
     }
 }
