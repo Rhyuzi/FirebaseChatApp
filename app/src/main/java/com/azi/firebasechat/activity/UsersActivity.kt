@@ -3,6 +3,8 @@ package com.azi.firebasechat.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.azi.firebasechat.R
@@ -22,9 +24,13 @@ class UsersActivity : AppCompatActivity() {
         setContentView(R.layout.users_activity)
 
         userRecyclerView = findViewById<RecyclerView>(R.id.userRecyclerView)
+        var imgBack = findViewById<ImageView>(R.id.imgBack)
 
         userRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
 
+//        imgBack.setOnClickListener{
+//            onBackPressed()
+//        }
         getUserlist()
     }
 

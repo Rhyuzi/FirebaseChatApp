@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.azi.firebasechat.R
+import com.azi.firebasechat.activity.ChatActivity
 import com.azi.firebasechat.model.User
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
@@ -31,10 +32,10 @@ class UserAdapter (private val context: Context, private val userList: ArrayList
         Glide.with(context).load(user.profileImage).placeholder(R.drawable.profile_image).into(holder.imgUser)
 
         holder.layoutUser.setOnClickListener {
-//            val intent = Intent(context,ChatActivity::class.java)
-//            intent.putExtra("userId",user.userId)
-//            intent.putExtra("userName",user.userName)
-//            context.startActivity(intent)
+            val intent = Intent(context, ChatActivity::class.java)
+            intent.putExtra("userId",user.userId)
+            intent.putExtra("userName",user.userName)
+            context.startActivity(intent)
         }
     }
 
