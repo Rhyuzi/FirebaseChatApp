@@ -50,27 +50,28 @@ class FirebaseService: FirebaseMessagingService() {
 
     override fun onMessageReceived(p0: RemoteMessage) {
         val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users")
-        var intent = Intent(this,ChatActivity::class.java)
+        var intent = Intent(this,UsersActivity::class.java)
         super.onMessageReceived(p0)
 
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (dataSnapShot: DataSnapshot in snapshot.children){
-                    val user = dataSnapShot.getValue(User::class.java)
-                    if (p0.data["title"] == user!!.userName){
-                        intent.putExtra("userId",user.userId)
-                        intent.putExtra("userName",user.userName)
-
-                        Log.d("TAGGGG",user.toString())
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(applicationContext,error.message, Toast.LENGTH_SHORT).show()
-            }
-
-        })
+//        databaseReference.addValueEventListener(object : ValueEventListener {
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                for (dataSnapShot: DataSnapshot in snapshot.children){
+//                    val user = dataSnapShot.getValue(User::class.java)
+//                    Log.d("TAGGGG TITLE",p0.data["title"].toString())
+//                    if (p0.data["title"] == user!!.userName){
+//                        intent.putExtra("userId",user.userId)
+//                        intent.putExtra("userName",user.userName)
+//
+//                        Log.d("TAGGGG",user.toString())
+//                    }
+//                }
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                Toast.makeText(applicationContext,error.message, Toast.LENGTH_SHORT).show()
+//            }
+//
+//        })
 
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
