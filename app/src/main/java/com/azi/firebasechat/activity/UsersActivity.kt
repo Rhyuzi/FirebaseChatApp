@@ -11,9 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.azi.firebasechat.R
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.viewpager2.widget.ViewPager2
+import com.azi.firebasechat.adapter.FragmentAdapter
 import com.azi.firebasechat.adapter.UserAdapter
 import com.azi.firebasechat.firebase.FirebaseService
 import com.azi.firebasechat.model.User
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.*
@@ -22,24 +25,47 @@ import com.google.firebase.messaging.FirebaseMessaging
 
 class UsersActivity : AppCompatActivity() {
     var userList = ArrayList<User>()
+    private lateinit var tabLayout: TabLayout
+    private lateinit var viewPager2: ViewPager2
+    private lateinit var adapter: FragmentAdapter
     private lateinit var userRecyclerView: RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.users_activity)
 
-        FirebaseService.sharedPref = getSharedPreferences("sharePref",Context.MODE_PRIVATE)
-        FirebaseInstanceId.getInstance().instanceId.addOnSuccessListener {
-            FirebaseService.token = it.token
-        }
-        userRecyclerView = findViewById<RecyclerView>(R.id.userRecyclerView)
-        var imgBack = findViewById<ImageView>(R.id.imgBack)
+        tabLayout = findViewById(R.id.tabLayout)
+        viewPager2 = findViewById(R.id.viewPager2)
 
-        userRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+        adapter = FragmentAdapter(supportFragmentManager , lifecycle)
 
-//        imgBack.setOnClickListener{
-//            onBackPressed()
-//        }
-        getUserlist()
+        tabLayout.addTab(tabLayout.newTab().setText("chat"))
+        tabLayout.addTab(tabLayout.newTab().setText("contact"))
+        tabLayout.addTab(tabLayout.newTab().setText("setting"))
+
+        viewPager2.adapter = adapter
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?){
+                if (tab != null){
+                    viewPager2.currentItem = tab.position
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+
+            }
+        })
+
+        viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int){
+                super.onPageSelected(position)
+                tabLayout.selectTab(tabLayout.getTabAt(position))
+            }
+        })
     }
 
     fun getUserlist(){

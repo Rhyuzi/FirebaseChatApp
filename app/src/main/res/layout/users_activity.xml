@@ -8,49 +8,79 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="68dp"
+        android:layout_height="81dp"
+        android:background="@color/green_wa"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:background="@color/green_wa">
+        android:orientation="horizontal">
 
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:layout_gravity="center"
+            android:layout_weight="2"
             android:paddingStart="20dp"
             android:text="@string/app_name"
+            android:textColor="@color/white"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"/>
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/imgBack"
             android:layout_width="2dp"
-            android:layout_weight="0.2"
             android:layout_height="45dp"
-            android:layout_marginLeft="10dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_search"
-            />
+            android:layout_marginLeft="10dp"
+            android:layout_weight="0.2"
+            android:src="@drawable/ic_search" />
 
         <ImageView
             android:id="@+id/more"
             android:layout_width="2dp"
-            android:layout_weight="0.2"
             android:layout_height="45dp"
+            android:layout_gravity="center"
             android:layout_marginLeft="5dp"
             android:layout_marginEnd="2dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_more"
-            />
+            android:layout_weight="0.2"
+            android:src="@drawable/ic_more" />
+
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/userRecyclerView"/>
+        android:layout_height="match_parent">
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/green_wa"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tabIndicatorColor="@null"
+            app:tabMode="fixed"
+            app:tabGravity="fill"
+            app:tabSelectedTextColor="@color/white"></com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginBottom="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
 </LinearLayout>
