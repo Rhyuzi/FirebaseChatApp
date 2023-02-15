@@ -12,8 +12,10 @@ import com.azi.firebasechat.R
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
+import com.azi.firebasechat.Constants.EngineUrl
 import com.azi.firebasechat.adapter.FragmentAdapter
 import com.azi.firebasechat.adapter.UserAdapter
+import com.azi.firebasechat.api.getApi
 import com.azi.firebasechat.firebase.FirebaseService
 import com.azi.firebasechat.model.User
 import com.google.android.material.tabs.TabLayout
@@ -32,6 +34,10 @@ class UsersActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.users_activity)
+
+//        val getApiContact = getApi()
+//        val urlApi = EngineUrl
+//        getApiContact.getApiContact("${urlApi.BASE_URL}/corpet/user/getcontact")
 
         tabLayout = findViewById(R.id.tabLayout)
         viewPager2 = findViewById(R.id.viewPager2)

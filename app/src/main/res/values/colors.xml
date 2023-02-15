@@ -17,4 +17,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green_wa">#075e54</color>
+    <color name="color_grey">#F3D1CFCF</color>
 </resources>

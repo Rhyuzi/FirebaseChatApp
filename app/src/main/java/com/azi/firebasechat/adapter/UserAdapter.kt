@@ -29,6 +29,7 @@ class UserAdapter (private val context: Context, private val userList: ArrayList
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = userList[position]
         holder.txtUserName.text = user.userName
+        holder.txtTemp.text = user.lastMessage
         Glide.with(context).load(user.profileImage).placeholder(R.drawable.profile_image).into(holder.imgUser)
 
         holder.layoutUser.setOnClickListener {

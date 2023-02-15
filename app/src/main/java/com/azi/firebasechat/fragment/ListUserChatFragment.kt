@@ -2,6 +2,7 @@ package com.azi.firebasechat.fragment
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,6 +74,7 @@ class ListUserChatFragment : Fragment() {
                     val user = dataSnapShot.getValue(User::class.java)
 
                     if (!user!!.userId.equals(firebase.uid)){
+                        Log.d("DATA USERR",user.toString())
                         userList.add(user)
                     }
                 }

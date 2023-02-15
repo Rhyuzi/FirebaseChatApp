@@ -39,7 +39,7 @@ class ChatActivity : AppCompatActivity() {
 
         chatRecyclerView = findViewById<RecyclerView>(R.id.chatRecycleView)
         chatRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
-
+        (chatRecyclerView.layoutManager as LinearLayoutManager).reverseLayout = true
 
 
         var imgProfile = findViewById<CircleImageView>(R.id.imgProfile)
@@ -149,3 +149,4 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 }
+
