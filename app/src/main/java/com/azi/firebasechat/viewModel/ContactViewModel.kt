@@ -5,8 +5,6 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.azi.firebasechat.Constants.EngineUrl
-import com.azi.firebasechat.adapter.ContactAdapter
-import com.azi.firebasechat.model.Chat
 import com.azi.firebasechat.model.Contact
 import com.azi.firebasechat.model.UsersResponse
 import com.azi.firebasechat.model.UsersResponseBody
@@ -14,7 +12,6 @@ import com.azi.firebasechat.network.RetrofitInstance
 import com.azi.firebasechat.network.RetrofitService
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import retrofit2.Call
