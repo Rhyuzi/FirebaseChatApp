@@ -13,7 +13,7 @@ import retrofit2.http.POST
 interface ApiEngine {
 
     @Headers("Authorization: syt_YXppdG9tMl9nbWFpbC5jb20_fBOxupcXzTwWDfDxNXKy_019uUD","Content-type:$CONTENT_TYPE")
-    @GET("fcm/send")
+    @GET("corpet/user/getcontact")
     suspend fun postNotification(
         @Body notification:PushNotification
     ): Response<ResponseBody>

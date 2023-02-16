@@ -23,6 +23,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.login_activity)
 
         auth = FirebaseAuth.getInstance()
+        firebaseUser = auth!!.currentUser!!
+
         if (firebaseUser != null) {
             val intent = Intent(
                 this@LoginActivity,

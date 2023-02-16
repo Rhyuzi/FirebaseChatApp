@@ -7,13 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.azi.firebasechat.Constants.EngineUrl
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.azi.firebasechat.R
 import com.azi.firebasechat.adapter.ContactAdapter
 import com.azi.firebasechat.model.Contact
 import com.azi.firebasechat.model.UsersResponseBody
+import com.azi.firebasechat.viewModel.ContactViewModel
 import com.google.gson.Gson
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -35,7 +37,9 @@ class ContactFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
     var contactList = ArrayList<UsersResponseBody>()
+    private lateinit var contactViewModel: ContactViewModel
     private lateinit var contactRecyclerView: RecyclerView
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,12 +56,64 @@ class ContactFragment : Fragment() {
         var view = inflater.inflate(R.layout.fragment_contact, container, false)
         contactRecyclerView = view.findViewById<RecyclerView>(R.id.contactRecyclerView)
         contactRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayout.VERTICAL, false)
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
 
-        val urlApi = EngineUrl
-        getApiContact("${urlApi.BASE_URL}/corpet/user/getcontact")
-        Log.d("URL","${urlApi.BASE_URL}/corpet/user/getcontact")
+        updateContact()
+
+        swipeRefreshLayout.setOnRefreshListener {
+            fetchData()
+        }
+
+        contactRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                if (dy > 0){
+                    val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                    val visibleItemCount = layoutManager.childCount
+                    val totalItemCount = layoutManager.itemCount
+
+                    val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+                    val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
+                    val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                    if (visibleItemCount + firstVisibleItem >= totalItemCount) {
+                        // Fetch more data here
+                        updateContact()
+                    }
+
+                }
+            }
+        })
+
 
         return view
+    }
+
+    private fun fetchData(){
+        contactRecyclerView.adapter?.notifyDataSetChanged()
+        swipeRefreshLayout.isRefreshing = false
+
+    }
+    private fun onScrolledToTop() {
+        updateContact()
+
+    }
+
+    fun updateContact(){
+        contactViewModel = ViewModelProvider(this).get(ContactViewModel::class.java)
+
+        contactViewModel.getApiHttp()
+        contactViewModel.contactDataList.observe(viewLifecycleOwner,{
+           initAdapter(it)
+        })
+    }
+
+    private fun initAdapter(data: List<UsersResponseBody>){
+        var contactAdapter = ContactAdapter(requireContext(),data)
+        contactRecyclerView.adapter = contactAdapter
+//        contactRecyclerView.adapter?.notifyItemRangeInserted(start, count)
+
     }
 
     fun getApiContact(url: String){
