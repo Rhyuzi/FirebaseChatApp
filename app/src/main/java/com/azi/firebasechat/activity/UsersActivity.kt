@@ -1,22 +1,13 @@
 package com.azi.firebasechat.activity
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.azi.firebasechat.R
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
-import com.azi.firebasechat.Constants.EngineUrl
 import com.azi.firebasechat.adapter.FragmentAdapter
 import com.azi.firebasechat.adapter.UserAdapter
-import com.azi.firebasechat.api.getApi
-import com.azi.firebasechat.firebase.FirebaseService
 import com.azi.firebasechat.model.User
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.auth.FirebaseAuth
@@ -26,7 +17,7 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 
 class UsersActivity : AppCompatActivity() {
-    var userList = ArrayList<User>()
+//    var userList = ArrayList<User>()
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager2: ViewPager2
     private lateinit var adapter: FragmentAdapter
@@ -74,34 +65,34 @@ class UsersActivity : AppCompatActivity() {
         })
     }
 
-    fun getUserlist(){
-        val firebase: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
-        val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users")
-
-        var userid = firebase.uid
-        FirebaseMessaging.getInstance().subscribeToTopic("/topics/$userid")
-
-        databaseReference.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                userList.clear()
-
-                for (dataSnapShot: DataSnapshot in snapshot.children){
-                    val user = dataSnapShot.getValue(User::class.java)
-
-                    if (!user!!.userId.equals(firebase.uid)){
-                        userList.add(user)
-                    }
-                }
-
-                var userAdapter = UserAdapter(this@UsersActivity,userList)
-                userRecyclerView.adapter = userAdapter
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(applicationContext,error.message,Toast.LENGTH_SHORT).show()
-            }
-
-        })
-
-    }
+//    fun getUserlist(){
+//        val firebase: FirebaseUser = FirebaseAuth.getInstance().currentUser!!
+//        val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("Users")
+//
+//        var userid = firebase.uid
+//        FirebaseMessaging.getInstance().subscribeToTopic("/topics/$userid")
+//
+//        databaseReference.addValueEventListener(object : ValueEventListener{
+//            override fun onDataChange(snapshot: DataSnapshot) {
+//                userList.clear()
+//
+//                for (dataSnapShot: DataSnapshot in snapshot.children){
+//                    val user = dataSnapShot.getValue(User::class.java)
+//
+//                    if (!user!!.userId.equals(firebase.uid)){
+//                        userList.add(user)
+//                    }
+//                }
+//
+//                var userAdapter = UserAdapter(this@UsersActivity,userList)
+//                userRecyclerView.adapter = userAdapter
+//            }
+//
+//            override fun onCancelled(error: DatabaseError) {
+//                Toast.makeText(applicationContext,error.message,Toast.LENGTH_SHORT).show()
+//            }
+//
+//        })
+//
+//    }
 }

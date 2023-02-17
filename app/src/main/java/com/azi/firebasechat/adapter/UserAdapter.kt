@@ -14,7 +14,7 @@ import com.azi.firebasechat.model.User
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class UserAdapter (private val context: Context, private val userList: ArrayList<User>) :
+class UserAdapter(private val context: Context, private val userList: List<User>) :
     RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

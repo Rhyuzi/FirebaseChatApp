@@ -76,7 +76,6 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun registerUser(userName:String,email:String,password:String){
-//        Toast.makeText(applicationContext,"es", Toast.LENGTH_SHORT).show()
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this){
                 if (it.isSuccessful){
