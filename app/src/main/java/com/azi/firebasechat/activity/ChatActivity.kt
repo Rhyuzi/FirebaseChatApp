@@ -96,7 +96,7 @@ class ChatActivity : AppCompatActivity() {
 
         })
     }
-g
+
     private fun sendMessages(senderId: String, receiverId: String, message: String){
         var reference: DatabaseReference? = FirebaseDatabase.getInstance().getReference()
 
